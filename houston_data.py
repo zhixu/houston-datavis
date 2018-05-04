@@ -46,7 +46,8 @@ toDF = splitRecipients(dataframe, 'To')
 print("Counting emails")
 toDF['Count'] = 1
 emailCount = pd.DataFrame(toDF.groupby(['Sender', 'To'])['Count'].sum())
-emailCount = emailCount.sort_values(['Count'], ascending=False)
+sortedEmailCount = emailCount.sort_values(['Count'], ascending=False)
+sortedEmailCount.to_csv('email_count.csv')
 
 # Get the email senders who do not receive any replies -- these are the automated messages
 print("Getting machine generated email addresses")
@@ -91,7 +92,8 @@ human = atobDF[atobDF['Ratio'] < 0.99]
 # write things out to json to graph it
 print("Writing to JSON")
 human = human[(human['Sent Emails'] + human['Received Emails']) > 400]
-
+humanCSV = human
+humanCSV.to_csv('graph_data.csv')
 groupedList = human.groupby(['Sender', 'To']).size().reset_index()
 groupOfEmails = groupedList['Sender'].append(groupedList['To'])
 uniqueEmails = pd.Index((groupOfEmails.reset_index(drop=True)).unique())
